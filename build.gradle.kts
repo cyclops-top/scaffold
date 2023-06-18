@@ -18,7 +18,7 @@ plugins {
 }
 
 tasks.dokkaHtmlMultiModule.configure {
-    outputDirectory.set(projectDir.resolve("docs/html"))
+    outputDirectory.set(projectDir.resolve("docs"))
 }
 tasks.dokkaGfmMultiModule.configure {
     outputDirectory.set(projectDir.resolve("docs/md"))
