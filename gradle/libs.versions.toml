@@ -1,0 +1,74 @@
+[versions]
+android-min-sdk = "26"
+android-compile-sdk = "33"
+android-target-sdk = "33"
+androidDesugarJdkLibs = "2.0.3"
+kotlin = "1.8.20"
+ksp = "1.8.20-1.0.11"
+gradle-plugin = "8.0.2"
+kotlinx-serialization = "1.5.1"
+kotlinx-datetime = "0.4.0"
+kotlinx-coroutines = "1.7.1"
+appcompat = "1.6.1"
+androidx-core = "1.10.1"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+navigation = "2.6.0"
+material = "1.9.0"
+hilt = "2.46.1"
+junit = "4.13.2"
+lifecycle = "2.5.1"
+[libraries]
+
+# Dependencies of the included build-logic
+android-gradle-pluginz = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle-plugin" }
+kotlin-gradle-pluginz = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
+
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+#kotlinx
+kotlinx-serialization-pluginz = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
+kotlinx-coroutines-jvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+navigation-args-pluginz = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation" }
+
+
+#lifecycle
+androidx-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
+
+androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
+
+hilt-pluginz = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-core = { module = "com.google.dagger:hilt-core", version.ref = "hilt" }
+hilt-navigation-fragment = { group = "androidx.hilt", name = "hilt-navigation-fragment", version = "1.0.0" }
+dokka-android-pluginz = { group = "org.jetbrains.dokka", name = "android-documentation-plugin", version.ref = "kotlin" }
+
+[plugins]
+com-android-application = { id = "com.android.application", version.ref = "gradle-plugin" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "kotlin" }
+[bundles]
+androidx = ["androidx-core", "androidx-appcompat", "androidx-viewmodel", "androidx-viewmodel-savedstate"]
+androidx-test = ["androidx-test-ext-junit", "espresso-core"]
+navigation = ["navigation-fragment-ktx", "navigation-ui-ktx"]

@@ -1,0 +1,9 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="UnusedBundleInGradleVersionCatalog" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="UnusedLibraryInGradleVersionCatalog" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="UnusedPluginInGradleVersionCatalog" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="UnusedVersionInGradleVersionCatalog" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  </profile>
+</component>

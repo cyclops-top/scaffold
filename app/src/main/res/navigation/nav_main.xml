@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/catalogFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="scaffold.simple.MainFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_main" />
+    <fragment
+        android:id="@+id/catalogFragment"
+        android:name="scaffold.simple.CatalogFragment"
+        android:label="{title}" >
+        <argument
+            android:name="items"
+            app:argType="scaffold.simple.Catalog$Item[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="false"
+            android:defaultValue="Catalog" />
+
+        <action
+            android:id="@+id/action_children"
+            app:destination="@id/catalogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pickersFragment"
+        android:name="scaffold.simple.pickers.PickersFragment"
+        android:label="Pickers" />
+
+</navigation>
