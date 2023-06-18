@@ -114,6 +114,19 @@ value class GuardNavController(private val navController: NavController) {
     }
 
     /**
+     * 通过 Uri 导航到目的地，通过[NavGraph.matchDeepLink]获取目的地的
+     * 默认参数和参数args中的[GuardNavController.PermissionKey]判断是否需要先判定权限
+     *
+     * @param deepLink deepLink uri to the destination reachable from the
+     *     current NavGraph
+     * @param navOptions special options for this navigation operation
+     * @throws IllegalArgumentException if the given deep link request is
+     *     invalid
+     */
+    context (Fragment) fun navigate(deepLink: Uri, navOptions: NavOptions?,  navigatorExtras: Navigator.Extras?) {
+        navigate(NavDeepLinkRequest(deepLink, null, null), navOptions, navigatorExtras)
+    }
+    /**
      * 通过 NavDeepLinkRequest 导航到目的地，通过[NavGraph.matchDeepLink]获取目的地的
      * 默认参数和参数args中的[GuardNavController.PermissionKey]判断是否需要先判定权限
      *
@@ -240,14 +253,14 @@ value class GuardNavController(private val navController: NavController) {
      * @param T 返回结果类型
      * @return Fragment 返回结果
      */
-    context (Fragment) suspend fun <T : Any> NavController.navigateForResult(
+    context (Fragment) suspend fun <T : Any> navigateForResult(
         @IdRes resId: Int,
         args: Bundle = bundleOf(),
         navOptions: NavOptions? = null,
         navigatorExtras: Navigator.Extras? = null,
     ): T? {
         val request = FragmentResultRequest<T>()
-        navigate(resId, request.mergeResultKey(args), navOptions, navigatorExtras)
+        this.navigate(resId, request.mergeResultKey(args), navOptions, navigatorExtras)
         return request.awaitResult()
     }
 
@@ -260,7 +273,7 @@ value class GuardNavController(private val navController: NavController) {
      * @param T 返回结果类型
      * @return Fragment 返回结果
      */
-    context (Fragment) suspend fun <T : Any> NavController.navigateForResult(
+    context (Fragment) suspend fun <T : Any> navigateForResult(
         deepLink: Uri,
         navOptions: NavOptions? = null,
         navigatorExtras: Navigator.Extras? = null,
@@ -279,7 +292,7 @@ value class GuardNavController(private val navController: NavController) {
      * @param T 返回结果类型
      * @return Fragment 返回结果
      */
-    context (Fragment) suspend fun <T : Any> NavController.navigateForResult(
+    context (Fragment) suspend fun <T : Any> navigateForResult(
         deepLink: String,
         navOptions: NavOptions? = null,
         navigatorExtras: Navigator.Extras? = null,
