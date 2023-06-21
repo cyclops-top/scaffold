@@ -36,6 +36,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             }
             dependencies {
                 implementation(libs.bundle("androidx"))
+                implementation(libs.library("paging"))
                 androidTestImplementation(libs.bundle("androidx.test"))
                 testImplementation(libs.library("junit"))
             }

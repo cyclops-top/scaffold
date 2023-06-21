@@ -1,4 +1,8 @@
 @file:Suppress("DSL_SCOPE_VIOLATION")
+
+import kx.build.implementation
+import kx.build.library
+
 plugins {
     id("sc.android.library")
     id("sc.hilt")
@@ -13,6 +17,7 @@ android {
 
 dependencies {
     dokkaPlugin(libs.dokka.android.pluginz)
+    implementation(libs.paging)
 }
 
 tasks.dokkaHtmlPartial{

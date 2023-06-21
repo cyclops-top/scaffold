@@ -21,6 +21,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             dependencies {
                 implementation(libs.bundle("androidx"))
                 implementation(libs.library("material"))
+                implementation(libs.library("paging"))
             }
         }
     }
