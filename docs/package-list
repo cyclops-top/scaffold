@@ -1,10 +1,13 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-
+$dokka.location:scaffold.views////PointingToDeclaration/scaffold/scaffold.views.html
 module:scaffold
 scaffold
 scaffold.app
+scaffold.broadcast
 scaffold.navigation
 scaffold.paging
 scaffold.permission
 scaffold.pickers
+scaffold.recyclerview
+scaffold.views
