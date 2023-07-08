@@ -15,7 +15,9 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import java.util.Collections
 
 
 /**
@@ -63,10 +65,10 @@ sealed interface DataEvent<K : Any, T : Any> {
 }
 
 /**
- * Patch to
+ * Patch to 忽略insert 需单独维护
  *
  * @param data
- * @param K primary key typeeySelector
+ * @param keySelector
  * @param K primary key type
  * @param T data type
  * @return
@@ -81,10 +83,6 @@ fun <K : Any, T : Any> DataEvent<K, T>.patchTo(
             it.keySelector() !in ids
         }
 
-        is DataEvent.Insert -> data.insertSeparators { before: T?, after: T? ->
-            if (transform(before, after)) value else null
-        }
-
         is DataEvent.Update -> data.map { item ->
             if (filter(item)) {
                 transform(item)
@@ -92,6 +90,8 @@ fun <K : Any, T : Any> DataEvent<K, T>.patchTo(
                 item
             }
         }
+
+        else -> data
     }
 }
 
@@ -174,6 +174,30 @@ fun <K : Any, T : Any> MutableDataEventsFlow<K, T>.update(key: K, transform: (T)
 
 
 /**
+ * Delete item
+ *
+ * @param key primary key type
+ * @param K primary key type
+ * @param T data type
+ * @receiver [MutableDataEventsFlow]
+ */
+fun <K : Any, T : Any> MutableDataEventsFlow<K, T>.delete(key: K) {
+    delete(listOf(key))
+}
+
+fun <K : Any, T : Any> DataEventsFlow<K, T>.filterInsert(filter: (T) -> Boolean): DataEventsFlow<K, T> {
+    return DataEventsFlowWrapper(
+        keySelector,
+        filter { if (it is DataEvent.Insert) filter(it.value) else true })
+}
+
+private class DataEventsFlowWrapper<K : Any, T : Any>(
+    override val keySelector: T.() -> K,
+    val flow: Flow<DataEvent<K, T>>,
+) :
+    DataEventsFlow<K, T>, Flow<DataEvent<K, T>> by flow
+
+/**
  * As data events flow
  *
  * @param K primary key type
@@ -247,11 +271,19 @@ fun <K : Any, T : Any> Flow<PagingData<T>>.patch(eventsFlow: DataEventsFlow<K, T
     return channelFlow {
         val producerScope = this
         var data: PagingData<T>? = null
-
+        val inserts = arrayListOf<DataEvent.Insert<K, T>>()
         launch {
             eventsFlow.collectLatest { event ->
                 if (data != null) {
-                    data = event.patchTo(data!!, eventsFlow.keySelector)
+                    data = when (event) {
+                        is DataEvent.Insert -> {
+                            inserts.add(event)
+                            data!!.applyInserts(inserts)
+                        }
+
+                        else -> event.patchTo(data!!, eventsFlow.keySelector)
+                            .applyInserts(inserts)
+                    }
                     producerScope.send(data!!)
                 }
             }
@@ -259,10 +291,21 @@ fun <K : Any, T : Any> Flow<PagingData<T>>.patch(eventsFlow: DataEventsFlow<K, T
         launch {
             this@patch.cachedIn(this).collectLatest {
                 data = it
+                inserts.clear()
                 producerScope.send(data!!)
             }
         }
     }
+}
+
+private fun <K : Any, T : Any> PagingData<T>.applyInserts(inserts: List<DataEvent.Insert<K, T>>): PagingData<T> {
+    var result = this
+    for (insert in Collections.unmodifiableList(inserts.toMutableList())) {
+        result = result.insertSeparators { before: T?, after: T? ->
+            if (insert.transform(before, after)) insert.value else null
+        }
+    }
+    return result
 }
 
 /**

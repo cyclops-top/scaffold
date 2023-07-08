@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.viewbinding.ViewBinding
 
 /**
@@ -29,7 +30,9 @@ abstract class BindingFragment<VB : ViewBinding>(val bindingCreator: (LayoutInfl
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = bindingCreator(inflater, container, false)
+        _binding = bindingCreator(inflater, container, false).also {
+            it.root.setViewTreeLifecycleOwner(viewLifecycleOwner)
+        }
         return binding.root
     }
 

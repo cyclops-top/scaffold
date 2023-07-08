@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import scaffold.ToolBox
 import scaffold.app.BindingFragment
+import scaffold.permission.permission
 import scaffold.simple.databinding.FragmentCatalogBinding
 import scaffold.simple.databinding.ItemCatalogBinding
 import javax.inject.Inject
@@ -24,6 +28,14 @@ class CatalogFragment : BindingFragment<FragmentCatalogBinding>(FragmentCatalogB
         super.onViewCreated(view, savedInstanceState)
         binding.items.adapter = adapter
         adapter.items = args.items?.toList() ?: catalog.root
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (ToolBox.permission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).granted) {
+//                ToolBox.download(Uri.parse("https://tenfei05.cfp.cn/creative/vcg/800/version23/VCG2156289abef.jpg"),"test.jpg")
+//                    .collectLatest {
+//
+//                    }
+            }
+        }
     }
 }
 

@@ -10,22 +10,29 @@ import kotlin.coroutines.resume
 
 /**
  * MaterialDatePicker callback 转协程
- * @receiver Fragment
+ *
  * @param S 时间类型
  * @return 选择结果
+ * @receiver Fragment
  */
 context (Fragment)
         private suspend fun <S> MaterialDatePicker<S>.await(): S? {
     val picker = this
     return suspendCancellableCoroutine { co ->
         picker.addOnCancelListener {
-            co.resume(null)
+            if (co.isActive) {
+                co.resume(null)
+            }
         }
         picker.addOnPositiveButtonClickListener {
-            co.resume(it)
+            if (co.isActive) {
+                co.resume(it)
+            }
         }
         picker.addOnNegativeButtonClickListener {
-            co.resume(null)
+            if (co.isActive) {
+                co.resume(null)
+            }
         }
         picker.show(this@Fragment.parentFragmentManager, "MaterialDatePicker")
     }
@@ -33,6 +40,7 @@ context (Fragment)
 
 /**
  * 选择日期
+ *
  * ```kotlin
  * Fragment{
  *  ...
@@ -44,6 +52,7 @@ context (Fragment)
  * }
  *
  * ```
+ *
  * @param block 配置选择器 [MaterialDatePicker.Builder]
  * @return 日期
  * @receiver [Fragment],[PickerScope]
@@ -57,6 +66,7 @@ context (Fragment)
 
 /**
  * 选择日期范围
+ *
  * ```kotlin
  * Fragment{
  *  ...
@@ -67,6 +77,7 @@ context (Fragment)
  *  ...
  * }
  * ```
+ *
  * @param block 配置选择器 [MaterialDatePicker.Builder]
  * @return 日期范围
  * @receiver [Fragment],[PickerScope]
