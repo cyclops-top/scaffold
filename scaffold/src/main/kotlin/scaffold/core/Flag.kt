@@ -6,6 +6,7 @@ import androidx.annotation.IntRange
 
 /**
  * Flag 标志位工具，使用value class 不会增加过多额外开销
+ *
  * ```kotlin
  *  private val flagCreator = FlagCreator()
  *  private val FlagEmpty = flagCreator.createNext()
@@ -31,14 +32,60 @@ import androidx.annotation.IntRange
  *      }
  *  }
  * ```
+ *
  * @sample scaffold.core.FlagUnitTest
  */
 sealed interface Flag {
     val value: Long
+
     val isEmpty: Boolean get() = value == 0L
+
+    /**
+     * Add flag
+     *
+     * ```kotlin
+     * var current = FlagEmpty
+     * current += Flag1
+     * ```
+     *
+     * @param flag
+     * @return new Flag
+     */
     operator fun plus(flag: Flag): Flag
+
+    /**
+     * remove flag
+     *
+     * ```kotlin
+     * var current = Flag1
+     * current -= Flag1
+     * //current is empty
+     * ```
+     *
+     * @param flag
+     * @return new Flag
+     */
     operator fun minus(flag: Flag): Flag
+
+    /**
+     * 是否包含该Flag 或者被包含
+     *
+     * ```kotlin
+     * if(current contains Flag1){
+     *   // do something
+     * }
+     * ```
+     *
+     * @param flag
+     * @return
+     */
     infix fun contains(flag: Flag): Boolean
+
+    /**
+     * 创建下一个标志，左移一位
+     *
+     * @return
+     */
     fun createNext(): Flag
 
     @JvmInline
@@ -82,17 +129,42 @@ sealed interface Flag {
     }
 }
 
+/**
+ * Flag scope 用于批量处理flag
+ *
+ * @property current
+ * @see Flag.process
+ */
 @JvmInline
 value class FlagScope(private val current: Flag) {
+    /** 是否包含该标志 */
     val Flag.has: Boolean get() = current.contains(this)
 }
 
+/**
+ * 对Flag批量处理
+ *
+ * ```kotlin
+ * current.process{
+ *  if(Flag1.has){
+ *      //do something
+ *  }
+ *  if(Flag2.has){
+ *      //do something
+ *  }
+ * }
+ * ```
+ *
+ * @param block
+ * @receiver Flag
+ */
 inline fun Flag.process(crossinline block: FlagScope.() -> Unit) {
     block(FlagScope(this))
 }
 
+/** Flag构建 */
 class FlagCreator {
-    var bitIndex = 0
+    private var bitIndex = 0
     fun createNext(): Flag {
         if (bitIndex > 64) {
             throw IllegalArgumentException("Flag supports maximum length of 64")
