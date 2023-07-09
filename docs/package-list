@@ -5,6 +5,7 @@ module:scaffold
 scaffold
 scaffold.app
 scaffold.broadcast
+scaffold.core
 scaffold.navigation
 scaffold.paging
 scaffold.permission
